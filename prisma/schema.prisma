@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Category table
+model Category {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  name  String  @db.VarChar(255)
+  Parts Parts[]
+}
+
+// Parts table
+model Parts {
+  ksewSNo   Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+
+  partNo       PartNo      @default(P_BLANK)
+  partName     String
+  requirement  Int
+  qtyReceived  Int
+  shipmentNo   ShipmentNo  @default(BLANK)
+  packingList  PackingList @default(BLANK)
+  qtyIssued    Int?
+  qtyBalanced  Int?
+  dateOfIssued DateTime?
+  ccTktNo      String?
+  name         String?
+  remarks      String?
+  // Add a foreign key to connect the Parts table to the Category table
+  categoryId   Int
+  category     Category    @relation(fields: [categoryId], references: [id])
+}
+
+// Define enum types for 'Part No.' 'Part Name', 'Shipment No.', and 'Packing List'
+
+// enum PartName {
+//   SCALANCE_XB005_unmanaged_Industrial_Ethernet_Switch_for_10/100_Mbit/s
+// }
+
+enum PartNo {
+  P_CT_SL_01
+  P_CT_SL_02
+  P_CT_SL_03
+  P_CT_SL_04
+  P_CT_SL_05
+  P_3VA9687_0FK21
+  P_3VA9988_0BL30
+  P_3VA9267_0FK21
+  P_3VA9988_0AA11
+  P_ECIA
+  P_4BZFMOH_Stromag_Brake
+  P_BLANK
+}
+
+enum ShipmentNo {
+  Shipment_1
+  Shipment_2
+  Shipment_3
+  Shipment_4
+  Shipment_5
+  Shipment_6
+  Shipment_7
+  Shipment_8
+  BLANK
+}
+
+enum PackingList {
+  PACKING_SLIP_50000456
+  PACKING_SLIP_50000421
+  PACKING_SLIP_50000384
+  PACKING_SLIP_50000495
+  BLANK
+}
